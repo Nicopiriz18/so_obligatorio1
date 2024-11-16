@@ -76,6 +76,8 @@ registrar_usuario() {
 registrar_mascota() {
     echo "----- Registrar Mascota -----"
     read -p "Número Identificador: " id_mascota
+    # Eliminar espacios en blanco
+    id_mascota=$(echo "$id_mascota" | tr -d '[:space:]')
     # Verificar que sea un número entero
     if ! [[ "$id_mascota" =~ ^[0-9]+$ ]]; then
         echo "El número identificador debe ser un número entero."
@@ -201,9 +203,9 @@ adoptar_mascota() {
     listar_mascotas
     read -p "Ingrese el número de la mascota que desea adoptar: " id_adoptar
     # Eliminar espacios en blanco
-    id_adoptar=$(echo "$id_adoptar" | xargs)
+    id_adoptar=$(echo "$id_adoptar" | tr -d '[:space:]')
     # Buscar la mascota
-    mascota_line=$(grep "^$id_adoptar;" mascotas.txt)
+    mascota_line=$(grep "^${id_adoptar};" mascotas.txt)
     if [ -z "$mascota_line" ]; then
         echo "Mascota no encontrada."
     else
@@ -213,8 +215,8 @@ adoptar_mascota() {
             # Agregar a adopciones.txt
             fecha_adopcion=$(date +"%d/%m/%Y")
             echo "$mascota_line;$fecha_adopcion" >> adopciones.txt
-            # Eliminar de mascotas.txt
-            grep -v "^$id_adoptar;" mascotas.txt > temp_mascotas.txt && mv temp_mascotas.txt mascotas.txt
+            # Eliminar de mascotas.txt usando sed
+            sed -i "/^${id_adoptar};/d" mascotas.txt
             echo "Adopción realizada exitosamente."
         else
             echo "Adopción cancelada."
