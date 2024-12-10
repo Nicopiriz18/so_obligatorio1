@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver
+    environment:
+      ACCEPT_EULA: "Y" # Aceptar los términos de uso
+      SA_PASSWORD: "ContraseñaSegura123" # Contraseña para el usuario SA
+    ports:
+      - "1433:1433" # Puerto predeterminado de SQL Server
+    volumes:
+      - ./data:/var/opt/mssql/data # Persistencia de datos
+    restart: always # Reiniciar el contenedor automáticamente si falla para asegurarnos que siempre quede up
